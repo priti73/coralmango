@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant Details</title>
+  <style>
+    /* CSS styles here */
+  </style>
+</head>
+<body>
+  <h1 id="restaurantName"></h1>
+
+  <div id="restaurantInfo">
+    <p id="restaurantAddress"></p>
+    <p id="restaurantDescription"></p>
+  </div>
+
+  <h2>Reviews</h2>
+
+  <ul id="reviewList">
+    <!-- Dynamic review list items will be added here -->
+  </ul>
+
+  <form id="reviewForm">
+    <textarea id="reviewInput" placeholder="Enter your review"></textarea>
+    <button type="submit">Submit Review</button>
+  </form>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.4.1/axios.min.js"></script>
+  <script src="restaurantdetails.js"></script>
+</body>
+</html>
