@@ -1,9 +1,9 @@
-const bcrypt = require('bcrypt');
-const { v4: uuidv4 } = require('uuid');
-const { sequelize } = require('../models/signup'); 
-const User = require('../models/signup');
-const sendOTPToEmail = require('../util/sendemail');
-const generateUniqueOTP = require('../util/generateuniquotp');
+const bcrypt = require("bcrypt");
+const { v4: uuidv4 } = require("uuid");
+const { sequelize } = require("../models/signup");
+const User = require("../models/signup");
+const sendOTPToEmail = require("../util/sendemail");
+const generateUniqueOTP = require("../util/generateuniquotp");
 
 function validateString(string) {
   return !string || string.length === 0;
@@ -29,29 +29,40 @@ exports.signup = async (req, res, next) => {
       return res.status(400).json({ error: "Invalid email format" });
     }
 
-    const existingUser = await User.findOne({ where: { email: email } }, { transaction: t });
+    const existingUser = await User.findOne(
+      { where: { email: email } },
+      { transaction: t }
+    );
 
     if (existingUser) {
-      if (existingUser.emailstatus === 'verified') {
+      if (existingUser.emailstatus === "verified") {
         await t.commit(); // Commit the transaction
-        return res.status(200).send({ message: "User already registered and verified" });
-      } else if (existingUser.emailstatus === 'not verified') {
+        return res
+          .status(200)
+          .send({ message: "User already registered and verified" });
+      } else if (existingUser.emailstatus === "not verified") {
         // Update user name and generate a new OTP
         const otp = await generateUniqueOTP();
-        const expiryTime = new Date(Date.now() + (3 * 60 * 1000)); // sets expiry time to 3 minutes from now
-         const hashedOtp = await bcrypt.hash(otp, 10);
+        const expiryTime = new Date(Date.now() + 3 * 60 * 1000); // sets expiry time to 3 minutes from now
+        const hashedOtp = await bcrypt.hash(otp, 10);
         const updatedUser = await User.update(
           { name: name, otp: hashedOtp, expiry: expiryTime },
           { where: { email: email }, transaction: t }
         );
         await sendOTPToEmail(email, otp);
         await t.commit(); // Commit the transaction
-        return res.status(201).json({ message: "User already registered but not verified. OTP sent to the email." ,email:email});
+        return res
+          .status(201)
+          .json({
+            message:
+              "User already registered but not verified. OTP sent to the email.",
+            email: email,
+          });
       }
     }
     // User doesn't exist, create a new one with a unique OTP
     const otp = await generateUniqueOTP();
-    const expiryTime = new Date(Date.now() + (3 * 60 * 1000)); // sets expiry time to 3 minutes from now
+    const expiryTime = new Date(Date.now() + 3 * 60 * 1000); // sets expiry time to 3 minutes from now
     const hashedOtp = await bcrypt.hash(otp, 10);
     const newUser = await User.create(
       {
@@ -59,7 +70,7 @@ exports.signup = async (req, res, next) => {
         name,
         otp: hashedOtp,
         emailstatus: "not verified",
-        expiry: expiryTime
+        expiry: expiryTime,
       },
       { transaction: t }
     );
@@ -67,7 +78,9 @@ exports.signup = async (req, res, next) => {
     await sendOTPToEmail(email, otp);
     await t.commit(); // Commit the transaction
 
-    res.status(202).json({ message: "OTP sent to provided email.",email:email });
+    res
+      .status(202)
+      .json({ message: "OTP sent to provided email.", email: email });
   } catch (err) {
     console.log(err);
     await t.rollback(); // Rollback the transaction in case of an error

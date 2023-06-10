@@ -1,32 +1,29 @@
-const Sequelize=require('sequelize');
+const Sequelize = require("sequelize");
 
-const sequelize=require('../util/database');
+const sequelize = require("../util/database");
 
-const Signup=sequelize.define('signup',{
-  
-   email:{
+const Signup = sequelize.define("signup", {
+  email: {
     type: Sequelize.STRING,
-    allowNull:false,
-    primaryKey:true
-    },
-   
-   name:{
+    allowNull: false,
+    primaryKey: true,
+  },
+
+  name: {
     type: Sequelize.STRING,
-    allowNull:false
-   },
-  otp:{
+    allowNull: false,
+  },
+  otp: {
     type: Sequelize.STRING,
-    allowNull: false
-  } ,
-  emailstatus:{
+    allowNull: false,
+  },
+  emailstatus: {
     type: Sequelize.STRING,
   },
   expiry: {
-        type: Sequelize.DATE,
-        allowNull: false
-      },
-},
+    type: Sequelize.DATE,
+    allowNull: false,
+  },
+});
 
-);
-
-module.exports =Signup;
+module.exports = Signup;

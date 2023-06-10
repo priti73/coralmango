@@ -14,7 +14,7 @@ exports.getAllRestaurants = async (req, res) => {
 exports.getRestaurantDetails = async (req, res) => {
   try {
     const restaurantId = req.params.id;
-    const restaurant = await Restaurant.findByPk(restaurantId ); //, { include: Review }
+    const restaurant = await Restaurant.findByPk(restaurantId ); 
     res.status(200).json({ restaurant });
   } catch (error) {
     console.error(error);

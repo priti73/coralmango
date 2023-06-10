@@ -1,5 +1,5 @@
-const bcrypt = require('bcrypt');
-const signup = require('../models/signup');
+const bcrypt = require("bcrypt");
+const signup = require("../models/signup");
 
 function validateString(string) {
   if (string == undefined || string.length === 0) {
@@ -23,23 +23,32 @@ exports.validateotp = async (req, res, next) => {
       },
     });
     if (signupDetails) {
-
       const currentDateTime = new Date();
       const expiryDateTime = new Date(signupDetails.expiry);
 
-      if (isMatch = await bcrypt.compare(otp, signupDetails.otp) && expiryDateTime >= currentDateTime) {
+      if (
+        (isMatch =
+          (await bcrypt.compare(otp, signupDetails.otp)) &&
+          expiryDateTime >= currentDateTime)
+      ) {
         signupDetails.emailstatus = "verified";
         await signupDetails.save();
-       return res.status(201).json({ message: "Successfully verified" });
-      }
-      else if (isMatch = await bcrypt.compare(otp, signupDetails.otp) && expiryDateTime < currentDateTime) {
-       return res.status(202).json({ message: "You need to get a new OTP. Your otp has expired" });
-      }
-      else {
-       return res.status(203).json({ message: "Please enter correct OTP" });
+        return res.status(201).json({ message: "Successfully verified" });
+      } else if (
+        (isMatch =
+          (await bcrypt.compare(otp, signupDetails.otp)) &&
+          expiryDateTime < currentDateTime)
+      ) {
+        return res
+          .status(202)
+          .json({ message: "You need to get a new OTP. Your otp has expired" });
+      } else {
+        return res.status(203).json({ message: "Please enter correct OTP" });
       }
     } else {
-     return res.status(204).json({ message: "You are already a verified user" });
+      return res
+        .status(204)
+        .json({ message: "You are already a verified user" });
     }
   } catch (err) {
     console.log(err);

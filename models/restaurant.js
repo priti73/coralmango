@@ -1,25 +1,25 @@
-const Sequelize = require('sequelize');
-const sequelize = require('../util/database');
+const Sequelize = require("sequelize");
+const sequelize = require("../util/database");
 
-const Restaurant = sequelize.define('restaurant', {
+const Restaurant = sequelize.define("restaurant", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
   },
   name: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   address: {
     type: Sequelize.STRING,
-    allowNull: false
+    allowNull: false,
   },
   description: {
     type: Sequelize.STRING,
-    allowNull: false
-  }
+    allowNull: false,
+  },
 });
 
 module.exports = Restaurant;
